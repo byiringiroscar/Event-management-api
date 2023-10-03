@@ -136,15 +136,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-CORS_ORIGIN_WHITELIST = [
-    "https://www.igihe.com"
-]
-CORS_ALLOWED_ORIGINS = [
-    "https://example.com",
-    "https://sub.example.com",
-    "http://localhost:8080",
-    "http://127.0.0.1:9000",
-]
+# CORS_ORIGIN_WHITELIST = [
+#     "https://www.igihe.com"
+# ]
+CORS_ALLOWED_ORIGINS = True
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
