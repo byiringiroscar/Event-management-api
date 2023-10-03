@@ -1,10 +1,6 @@
 from rest_framework import serializers
 from .models import User
 import re
-from django.core.validators import RegexValidator
-from django.contrib import auth
-from rest_framework.exceptions import AuthenticationFailed
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
 class RegisterSerializer(serializers.ModelSerializer):
