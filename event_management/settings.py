@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'api',
     'authentication.apps.AuthenticationConfig',
     'rest_framework',
+    'drf_yasg',
 ]
 
 REST_FRAMEWORK = {
