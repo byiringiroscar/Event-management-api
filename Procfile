@@ -1,2 +1,5 @@
-web: python manage.py migrate && gunicorn <event_management>.wsgi
+web: gunicorn event_management.wsgi
+release: python manage.py makemigrations --noinput
+release : python manage.py collectstatic --noinput
+release: python manage.py migrate --noinput
 
