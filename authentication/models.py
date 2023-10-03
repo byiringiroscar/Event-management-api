@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):
         if phone_number is None:
             raise TypeError('user should have phone_number')
         user = self.create_user(
-            username, email, full_name, phone_number,password
+            username, email, full_name, phone_number, password
         )
         user.is_superuser = True
         user.is_staff = True
@@ -62,9 +62,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
     # get full name
     def get_full_name(self):
         return self.full_name
+
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
         # Simplest possible answer: Yes, always
@@ -74,11 +76,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
-
-    @property
-    def is_staff(self):
-        "Is the user a member of staff?"
-        return self.staff
 
     @property
     def is_admin(self):
