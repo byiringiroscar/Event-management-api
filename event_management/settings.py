@@ -143,7 +143,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # CORS_ORIGIN_WHITELIST = [
 #     "https://www.igihe.com"
 # ]
-CORS_ALLOWED_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "https://www.igihe.com",
+]
+
 
 
 # Default primary key field type
