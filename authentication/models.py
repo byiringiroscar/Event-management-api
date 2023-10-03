@@ -67,24 +67,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         return self.full_name
 
-    def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    @property
-    def is_admin(self):
-        "Is the user a admin member?"
-        return self.admin
-
-    def tokens(self):
-        refresh = RefreshToken.for_user(self)
-        return {
-            'refresh': str(refresh),
-            'access': str(refresh.access_token)
-        }
+    # def tokens(self):
+    #     refresh = RefreshToken.for_user(self)
+    #     return {
+    #         'refresh': str(refresh),
+    #         'access': str(refresh.access_token)
+    #     }
