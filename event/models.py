@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from lyric.models import CompetitionSet
 
 User = settings.AUTH_USER_MODEL
 
@@ -21,4 +22,8 @@ class Events(models.Model):
 
     def __str__(self):
         return self.event_name
+    
+    @property
+    def get_competion_set(self):
+        return CompetitionSet.objects.filter(event=self)
 
