@@ -27,7 +27,7 @@ from django.views.static import serve
 schema_view = get_schema_view(
     openapi.Info(
         title="Event management System",
-        default_version='v3',
+        default_version='v1',
         description="Test description",
         terms_of_service="https://www.ourapp.com/policies/terms/",
         contact=openapi.Contact(email="event@gmail.com"),
