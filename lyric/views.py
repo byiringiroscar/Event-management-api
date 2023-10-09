@@ -33,6 +33,8 @@ class CompetitionListCreateView(ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        if Competition.objects.filter(user=self.request.user, competition_set=serializer.validated_data['competition_set']).exists():
+            return Response({'message': 'You have already done this competition'}, status=status.HTTP_400_BAD_REQUEST)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
