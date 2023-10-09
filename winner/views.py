@@ -8,8 +8,10 @@ from lyric.models import CompetitionSet
 import json
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from winner.models import WinnerLyric
 
 User = get_user_model()
+
 
 # Create your views here.
 
@@ -24,7 +26,9 @@ def calculate_winner(official_lyrics, sample_gamers):
     for gamers in sample_gamers:
         user_games = gamers.user
         lyric = gamers.user_lyrics
-        sample_data.append({'user': user_games, 'lyric': lyric})
+        comp_set = gamers.competition_set
+        event = comp_set.event
+        sample_data.append({'user': user_games, 'lyric': lyric, 'competition_set': comp_set, 'event': event})
     winner_participant = []
     for data in sample_data:
         matcher = difflib.SequenceMatcher(None, data['lyric'], official_lyrics)
@@ -38,7 +42,7 @@ def calculate_winner(official_lyrics, sample_gamers):
     return winner
 
 
-@api_view(['GET', ])
+@api_view(['POST', ])
 def winner_lyrics(request):
     competition_set = CompetitionSet.objects.filter(status=False)
     if not competition_set:
@@ -50,16 +54,18 @@ def winner_lyrics(request):
             official_lyrics = comp_set.artist_lyric
             winner = calculate_winner(official_lyrics, competition)
             users_won.append(winner)
-            # comp_set.status = True
-            # comp_set.save()
-            # Serialize the users_won list to JSON
+            comp_set.status = True
+            comp_set.save()
         users_won_models = []
         for user_name in users_won:
             email = user_name['user'].email
-            try:
-                user_new = User.objects.get(email=email)
-            except:
-                return Response({'message': 'User with this email does not exist'}, status=status.HTTP_404_NOT_FOUND)
+            user_new = User.objects.get(email=email)
+            winner = WinnerLyric.objects.create(
+                user=user_new,
+                competition_set=user_name['competition_set'],
+                event=user_name['event']
+            )
+            winner.save()
             users_won_models.append(user_new)
 
         serializer = UserSerializer(users_won_models, many=True)
