@@ -16,6 +16,10 @@ class CompetitionSet(models.Model):
 
     def __str__(self):
         return f'{self.event.event_name} ---- {self.artist_name}'
+    
+    @property
+    def get_competition(self):
+        return Competition.objects.filter(competition_set=self)
 
 
 class Competition(models.Model):
