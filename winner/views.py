@@ -9,6 +9,7 @@ import json
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from winner.models import WinnerLyric
+from .serializers import WinnerLyricSerializer
 
 User = get_user_model()
 
@@ -43,7 +44,7 @@ def calculate_winner(official_lyrics, sample_gamers):
 
 
 @api_view(['POST', ])
-def winner_lyrics(request):
+def post_winner_lyrics(request):
     competition_set = CompetitionSet.objects.filter(status=False)
     if not competition_set:
         return Response({'message': 'No competition set is available'}, status=status.HTTP_400_BAD_REQUEST)
@@ -70,3 +71,10 @@ def winner_lyrics(request):
 
         serializer = UserSerializer(users_won_models, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET', ])
+def get_winners_list(request):
+    winners = WinnerLyric.objects.all()
+    serializer = WinnerLyricSerializer(winners, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
