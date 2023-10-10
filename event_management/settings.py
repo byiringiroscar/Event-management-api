@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'lyric',
     'authentication.apps.AuthenticationConfig',
     'rest_framework',
-    'winner'
+    'winner',
+    'photo_challenge'
 ]
 
 SWAGGER_SETTINGS = {
