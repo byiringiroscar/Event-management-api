@@ -16,3 +16,14 @@ class WinnerLyric(models.Model):
 
     def __str__(self):
         return f'{self.user.full_name} ---- {self.event.event_name}'
+
+
+class WinnerPhotoChallenge(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    event = models.ForeignKey(Events, on_delete=models.CASCADE)
+    image = models.ImageField()
+    caption = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.user.full_name} --- {self.event.event_name}'

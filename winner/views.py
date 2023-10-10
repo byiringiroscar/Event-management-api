@@ -8,8 +8,9 @@ from lyric.models import CompetitionSet
 import json
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-from winner.models import WinnerLyric
-from .serializers import WinnerLyricSerializer
+from winner.models import WinnerLyric, WinnerPhotoChallenge
+from .serializers import WinnerLyricSerializer, WinnerPhotoChallengeSerializer
+from photo_challenge.models import PhotoChallenge
 
 User = get_user_model()
 
@@ -77,4 +78,33 @@ def post_winner_lyrics(request):
 def get_winners_list(request):
     winners = WinnerLyric.objects.all()
     serializer = WinnerLyricSerializer(winners, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST', ])
+def post_winner_photo_challenge(request):
+    photo_challenges = PhotoChallenge.objects.filter(status=False)
+    if not photo_challenges:
+        return Response({'message': 'No photo challenge is available'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        # take one from in random photo_challenge data
+        random_photo_winner = photo_challenges.order_by('?').first()
+        for photo in photo_challenges:
+            #  change status to True
+            photo.status = True
+            photo.save()
+    user = random_photo_winner.user
+    event = random_photo_winner.event
+    caption = random_photo_winner.caption
+    image = random_photo_winner.image
+    winner = WinnerPhotoChallenge.objects.create(user=user, event=event, caption=caption, image=image)
+    winner.save()
+    serializer = WinnerPhotoChallengeSerializer(winner)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET', ])
+def get_photo_challenge_winners_list(request):
+    winners = WinnerPhotoChallenge.objects.all()
+    serializer = WinnerPhotoChallengeSerializer(winners, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
