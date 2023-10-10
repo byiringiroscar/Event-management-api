@@ -29,7 +29,6 @@ class PhotoChallengeList(ListCreateAPIView):
                         status=status.HTTP_201_CREATED, headers=headers)
 
 
-
 class PhotoChallengeDetail(RetrieveUpdateDestroyAPIView):
     queryset = PhotoChallenge.objects.all()
     serializer_class = PhotoChallengeSerializer
