@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.db.utils import IntegrityError
 
 
 # Create your models here.
@@ -15,6 +16,11 @@ class UserManager(BaseUserManager):
             raise TypeError('user should have full_name')
         if phone_number is None:
             raise TypeError('user should have phone_number')
+
+        # # Check if a user with the same username already exists
+        # if self.model.objects.filter(username=username).exists():
+        #     raise IntegrityError('User with this user name already exists.')
+
         user = self.model(
             username=username,
             email=self.normalize_email(email),
@@ -48,7 +54,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=200, unique=True, db_index=True)
     email = models.EmailField(max_length=200, unique=True, db_index=True)
-    full_name = models.CharField(max_length=200, unique=True, db_index=True)
+    full_name = models.CharField(max_length=200, db_index=True)
     phone_number = models.CharField(max_length=200, unique=True, db_index=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=True)

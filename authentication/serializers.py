@@ -1,6 +1,10 @@
 from rest_framework import serializers
 from .models import User
 import re
+# from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
+
+# User = get_user_model()
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -22,6 +26,21 @@ class RegisterSerializer(serializers.ModelSerializer):
         phone_number = attrs.get('phone_number', '')
         password = attrs.get('password', '')
         phone_regex = re.compile(r'^(\+\d{1,3}\s?)?\d{7,14}$')
+        try:
+            existing_user = User.objects.get(username=username)
+            raise serializers.ValidationError('User with this username already exists.')
+        except ObjectDoesNotExist:
+            pass
+        try:
+            existing_user = User.objects.get(email=email)
+            raise serializers.ValidationError('User with this email already exists.')
+        except ObjectDoesNotExist:
+            pass
+        try:
+            existing_user = User.objects.get(phone_number=phone_number)
+            raise serializers.ValidationError('User with this phone number already exists.')
+        except ObjectDoesNotExist:
+            pass
         if not phone_regex.match(phone_number):
             raise serializers.ValidationError('The phone number is not valid')
         if not username.isalnum():
@@ -33,5 +52,5 @@ class RegisterSerializer(serializers.ModelSerializer):
         # validate the phone number
 
     def create(self, validated_data):
-        validated_data.pop('password_2', None)  # Remove 'password_2' from validated_data
+        validated_data.pop('password_2', None)
         return User.objects.create_user(**validated_data)
